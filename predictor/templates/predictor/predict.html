@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Calculadora Titanic</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: #f0f0f0;
+        }
+        .container {
+            max-width: 720px;
+            margin: 50px auto;
+            background-color: #1c1c1c;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+        }
+        h1 {
+            text-align: center;
+            color: #00e5ff;
+            margin-bottom: 10px;
+        }
+        p {
+            text-align: center;
+            color: #b0bec5;
+            margin-bottom: 30px;
+        }
+        form {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 20px;
+        }
+        label {
+            font-weight: bold;
+            color: #80deea;
+        }
+        input, select {
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            background-color: #2e2e2e;
+            color: #fff;
+            transition: box-shadow 0.3s ease;
+        }
+        input:focus, select:focus {
+            outline: none;
+            box-shadow: 0 0 8px #00e5ff;
+        }
+        button {
+            grid-column: 1 / -1;
+            padding: 14px;
+            background-color: #00e5ff;
+            color: #000;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        button:hover {
+            background-color: #00bcd4;
+            transform: scale(1.03);
+        }
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #263238;
+            border-left: 6px solid #00e5ff;
+            border-radius: 6px;
+            text-align: center;
+        }
+        .result h2 {
+            margin: 0;
+            color: #4dd0e1;
+        }
+        .result p {
+            font-size: 2.4em;
+            font-weight: bold;
+            color: #fff;
+            margin-top: 10px;
+        }
+        .error {
+            margin-top: 20px;
+            color: #ef5350;
+            font-weight: bold;
+            text-align: center;
+        }
+        table.reference {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 30px;
+            background-color: #2e2e2e;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        table.reference th, table.reference td {
+            padding: 12px;
+            border-bottom: 1px solid #455a64;
+            color: #e0f7fa;
+        }
+        table.reference th {
+            background-color: #37474f;
+        }
+        table.reference tr:last-child td {
+            border-bottom: none;
+        }
+
+        @media (max-width: 600px) {
+            form {
+                grid-template-columns: 1fr;
+            }
+            button {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚢 Calculadora de Supervivencia</h1>
+        <p>Ingresa los datos del pasajero para predecir su probabilidad de supervivencia.</p>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <label for="pclass">Clase:</label>
+            <select id="pclass" name="pclass" required>
+                <option value="1" {% if inputs.pclass == '1' %}selected{% endif %}>1ra Clase</option>
+                <option value="2" {% if inputs.pclass == '2' %}selected{% endif %}>2da Clase</option>
+                <option value="3" {% if inputs.pclass == '3' %}selected{% endif %}>3ra Clase</option>
+            </select>
+
+            <label for="sex">Género:</label>
+            <select id="sex" name="sex" required>
+                <option value="male" {% if inputs.sex == 'male' %}selected{% endif %}>Masculino</option>
+                <option value="female" {% if inputs.sex == 'female' %}selected{% endif %}>Femenino</option>
+            </select>
+
+            <label for="embarked">Puerto de Embarque:</label>
+            <select id="embarked" name="embarked" required>
+                <option value="S" {% if inputs.embarked == 'S' %}selected{% endif %}>Southampton</option>
+                <option value="C" {% if inputs.embarked == 'C' %}selected{% endif %}>Cherbourg</option>
+                <option value="Q" {% if inputs.embarked == 'Q' %}selected{% endif %}>Queenstown</option>
+            </select>
+
+            <label for="age">Edad:</label>
+            <input type="number" id="age" name="age" step="0.1" min="0" value="{{ inputs.age }}" placeholder="Ej. 28" required>
+
+            <label for="fare">Costo del Boleto:</label>
+            <input type="number" id="fare" name="fare" step="0.01" min="0" value="{{ inputs.fare }}" placeholder="Ej. 35.50" required>
+
+            <button type="submit">Calcular cual es la probabilidad</button>
+        </form>
+
+        {% if result %}
+            <div class="result">
+                <h2>Probabilidad de sobrevivirt:</h2>
+                <p>{{ result }}</p>
+            </div>
+        {% endif %}
+
+        {% if error %}
+            <div class="error">{{ error }}</div>
+        {% endif %}
+
+        <table class="reference">
+            <thead>
+                <tr>
+                    <th>Clase</th>
+                    <th>Costo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>Primera Clase</td><td>De 30 a 80 Dólares</td></tr>
+                <tr><td>Segunda Clase</td><td>De 13 a 26 Dólares</td></tr>
+                <tr><td>Tercera Clase</td><td>De 7 a 15 Dólares</td></tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
