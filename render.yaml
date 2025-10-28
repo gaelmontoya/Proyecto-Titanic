@@ -1,13 +1,12 @@
 services:
   - type: web
-    name: proyecto-titanic
+    name: titanic-django
     env: python
-    plan: free
-    buildCommand: |
-      pip install --upgrade pip
-      pip install --no-cache-dir gunicorn
-      pip install --no-cache-dir -r requirements.txt
-    startCommand: gunicorn titanic_project.wsgi:application
+    rootDir: titanic_project
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn titanic_predictor.wsgi:application
     envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: titanic_predictor.settings
       - key: PYTHON_VERSION
-        value: 3.11
+        value: 3.13
