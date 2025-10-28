@@ -2,6 +2,7 @@ services:
   - type: web
     name: titanic-django
     env: python
+    rootDir: titanic_project
     buildCommand: pip install -r requirements.txt
     startCommand: python -m gunicorn titanic_project.wsgi:application --bind 0.0.0.0:$PORT
     envVars:
