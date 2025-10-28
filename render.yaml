@@ -5,9 +5,8 @@ services:
     plan: free
     buildCommand: |
       pip install --upgrade pip
-      pip install gunicorn
       pip install -r requirements.txt
-    startCommand: gunicorn titanic_project.wsgi:application
+    startCommand: /opt/render/project/src/.venv/bin/gunicorn titanic_project.wsgi:application
     envVars:
       - key: PYTHON_VERSION
         value: 3.11
