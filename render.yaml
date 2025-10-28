@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: proyecto-titanic
+    env: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn titanic_project.wsgi:application"
+    plan: free
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11
